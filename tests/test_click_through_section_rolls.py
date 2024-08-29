@@ -1,20 +1,8 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-import time
+from src.locators import BurgerLocators
+from conftest import driver
 
-driver = webdriver.Chrome()
-
-driver.get("https://stellarburgers.nomoreparties.site/")
-
-
-driver.find_element(By.XPATH, ".//span[text()='Соусы']").click()
-
-time.sleep(2)
-
-driver.find_element(By.XPATH, ".//span[text()='Булки']").click()
-
-time.sleep(2)
-
-assert driver.find_element(By.XPATH, ".//p[text()='Флюоресцентная булка R2-D3']").is_displayed()
-
-driver.quit()
+class TestClickThroughRolls():
+    def test_click_through_rolls(self, driver):
+        driver.find_element(*BurgerLocators.fillings).click()
+        driver.find_element(*BurgerLocators.rolls).click()
+        assert driver.find_element(*BurgerLocators.name_rolls).is_displayed()

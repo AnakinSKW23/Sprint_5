@@ -1,17 +1,12 @@
-from selenium import webdriver
+from src.locators import BurgerLocators
+from conftest import driver
 from selenium.webdriver.common.by import By
 
-driver = webdriver.Chrome()
+class TestWrongPassword():
 
-driver.get("https://stellarburgers.nomoreparties.site/")
-
-driver.find_element(By.LINK_TEXT, "Личный Кабинет").click()
-driver.find_element(By.XPATH, ".//a[@href='/register']").click()
-driver.find_element(By.XPATH, ".//fieldset[1]/div/div/input").send_keys("Nikolay")
-driver.find_element(By.XPATH, ".//fieldset[2]/div/div/input").send_keys("NikolayKluchnikov1000@mail.ru")
-driver.find_element(By.XPATH, ".//fieldset[3]/div/div/input").send_keys("222")
-driver.find_element(By.XPATH, ".//button[text()='Зарегистрироваться']").click()
-
-assert driver.find_element(By.XPATH, ".//p[text()='Некорректный пароль']").text == 'Некорректный пароль'
-
-driver.quit()
+    def test_wrong_password(self, driver):
+        driver.find_element(*BurgerLocators.personal_account).click()
+        driver.find_element(*BurgerLocators.registration_button).click()
+        driver.find_element(*BurgerLocators.registration_password).send_keys("222")
+        driver.find_element(*BurgerLocators.registration_text_btn).click()
+        assert driver.find_element(By.XPATH, ".//p[text()='Некорректный пароль']").text == 'Некорректный пароль'

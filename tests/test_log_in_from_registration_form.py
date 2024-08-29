@@ -1,20 +1,21 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+from src.locators import BurgerLocators
+from conftest import driver
 import time
+from src.data import BurgerData
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.common.by import By
 
-driver = webdriver.Chrome()
+class TestLogInRegistrationForm():
 
-driver.get("https://stellarburgers.nomoreparties.site/")
-
-driver.find_element(By.LINK_TEXT, "Личный Кабинет").click()
-driver.find_element(By.XPATH, ".//a[@href='/register']").click()
-driver.find_element(By.LINK_TEXT, "Войти").click()
-driver.find_element(By.XPATH, ".//input[@name='name']").send_keys("NikolayKluchnikov1000@mail.ru")
-driver.find_element(By.XPATH, ".//input[@name='Пароль']").send_keys("123456")
-driver.find_element(By.XPATH, ".//button[text()='Войти']").click()
-
-time.sleep(2)
-
-assert driver.find_element(By.XPATH, ".//button[text()='Оформить заказ']").text == 'Оформить заказ'
-
-driver.quit()
+    def test_log_in_registration_form(self, driver):
+        user_email = BurgerData.user_email
+        user_password = BurgerData.user_password
+        driver.find_element(*BurgerLocators.personal_account).click()
+        driver.find_element(*BurgerLocators.registration_button).click()
+        driver.find_element(*BurgerLocators.login_button_entrance).click()
+        driver.find_element(*BurgerLocators.registration_email).send_keys(user_email)
+        driver.find_element(*BurgerLocators.registration_password).send_keys(user_password)
+        driver.find_element(*BurgerLocators.login_button).click()
+        WebDriverWait(driver, 10).until(expected_conditions.element_to_be_clickable((By.XPATH, ".//section[2]/div/button")))
+        assert driver.find_element(*BurgerLocators.order_button).is_displayed()

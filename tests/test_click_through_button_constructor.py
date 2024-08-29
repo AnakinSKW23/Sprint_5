@@ -1,29 +1,28 @@
-from selenium import webdriver
+from src.helpers import generate_user_data
+from src.locators import BurgerLocators
+from src.data import BurgerData
+from conftest import driver
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
-import time
 
-driver = webdriver.Chrome()
 
-driver.get("https://stellarburgers.nomoreparties.site/")
+class TestClickButtonConstructor():
 
-driver.find_element(By.LINK_TEXT, "Личный Кабинет").click()
-driver.find_element(By.XPATH, ".//a[@href='/register']").click()
-driver.find_element(By.XPATH, ".//fieldset[1]/div/div/input").send_keys("Nikolay")
-driver.find_element(By.XPATH, ".//fieldset[2]/div/div/input").send_keys("NikolayKluchnikov1004@mail.ru")
-driver.find_element(By.XPATH, ".//fieldset[3]/div/div/input").send_keys("123456")
-driver.find_element(By.XPATH, ".//button[text()='Зарегистрироваться']").click()
-
-time.sleep(1)
-
-driver.find_element(By.XPATH, ".//input[@name='name']").send_keys("NikolayKluchnikov1004@mail.ru")
-driver.find_element(By.XPATH, ".//input[@name='Пароль']").send_keys("123456")
-driver.find_element(By.XPATH, ".//button[text()='Войти']").click()
-
-driver.find_element(By.LINK_TEXT, "Личный Кабинет").click()
-driver.find_element(By.LINK_TEXT, "Конструктор").click()
-
-time.sleep(1)
-
-assert driver.current_url == 'https://stellarburgers.nomoreparties.site/'
-
-driver.quit()
+    def test_click_constructor(self, driver):
+        email_data, password_data = generate_user_data()
+        user_name = BurgerData.user_name
+        start_page = BurgerData.start_page
+        driver.find_element(*BurgerLocators.personal_account).click()
+        driver.find_element(*BurgerLocators.registration_button).click()
+        driver.find_element(*BurgerLocators.registration_name).send_keys(user_name)
+        driver.find_element(*BurgerLocators.registration_email).send_keys(email_data)
+        driver.find_element(*BurgerLocators.registration_password).send_keys(password_data)
+        driver.find_element(*BurgerLocators.registration_text_btn).click()
+        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.XPATH, "//h2[text()='Вход']")))
+        driver.find_element(*BurgerLocators.login_email).send_keys(email_data)
+        driver.find_element(*BurgerLocators.login_password).send_keys(password_data)
+        driver.find_element(*BurgerLocators.login_button).click()
+        driver.find_element(*BurgerLocators.personal_account).click()
+        driver.find_element(*BurgerLocators.constructor).click()
+        assert driver.current_url == start_page
