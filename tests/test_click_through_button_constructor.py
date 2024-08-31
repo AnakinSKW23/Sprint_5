@@ -4,8 +4,6 @@ from src.data import BurgerData
 from conftest import driver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.common.by import By
-
 
 class TestClickButtonConstructor():
 
@@ -19,7 +17,7 @@ class TestClickButtonConstructor():
         driver.find_element(*BurgerLocators.registration_email).send_keys(email_data)
         driver.find_element(*BurgerLocators.registration_password).send_keys(password_data)
         driver.find_element(*BurgerLocators.registration_text_btn).click()
-        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.XPATH, "//h2[text()='Вход']")))
+        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located(BurgerLocators.entrance_button))
         driver.find_element(*BurgerLocators.login_email).send_keys(email_data)
         driver.find_element(*BurgerLocators.login_password).send_keys(password_data)
         driver.find_element(*BurgerLocators.login_button).click()

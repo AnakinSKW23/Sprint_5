@@ -4,7 +4,6 @@ from conftest import driver
 from src.data import BurgerData
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.common.by import By
 
 class TestLogOut():
 
@@ -18,14 +17,12 @@ class TestLogOut():
         driver.find_element(*BurgerLocators.registration_email).send_keys(email_data)
         driver.find_element(*BurgerLocators.registration_password).send_keys(password_data)
         driver.find_element(*BurgerLocators.registration_text_btn).click()
-        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.XPATH, ".//h2[text()='Вход']")))
+        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located(BurgerLocators.entrance_button))
         driver.find_element(*BurgerLocators.login_email).send_keys(email_data)
         driver.find_element(*BurgerLocators.login_password).send_keys(password_data)
         driver.find_element(*BurgerLocators.login_button).click()
         driver.find_element(*BurgerLocators.personal_account).click()
-        WebDriverWait(driver, 10).until(expected_conditions.element_to_be_clickable((By.XPATH, ".//a[text()='Профиль']")))
+        WebDriverWait(driver, 10).until(expected_conditions.element_to_be_clickable(BurgerLocators.profile_button))
         driver.find_element(*BurgerLocators.exit_button).click()
-        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.XPATH, ".//h2[text()='Вход']")))
+        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located(BurgerLocators.entrance_button))
         assert driver.current_url == url_login
-
-
