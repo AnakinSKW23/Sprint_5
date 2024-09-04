@@ -9,4 +9,4 @@ class TestWrongPassword():
         driver.find_element(*BurgerLocators.registration_button).click()
         driver.find_element(*BurgerLocators.registration_password).send_keys("222")
         driver.find_element(*BurgerLocators.registration_text_btn).click()
-        assert driver.find_element(By.XPATH, ".//p[text()='Некорректный пароль']").text == 'Некорректный пароль'
+        assert driver.find_element(*BurgerLocators.wrong_password).text == 'Некорректный пароль'
